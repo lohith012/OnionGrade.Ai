@@ -1,0 +1,41 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+.pytest_cache/
+
+# Large Datasets & Archives (Keep repository lightweight)
+dataset/
+dataset_cls/
+dataset_bulb_raw/
+dataset_merged/
+dataset_merged_v2/
+*.zip
+*.tar.gz
+
+# YOLO Training Runs & Intermediate Weights (Keep only models/best.pt)
+runs/
+*.pt.cache
+*.cache
+
+# Uploads & Temporary Reports generated at runtime
+uploads/
+reports/
+*.db
+*.sqlite3
+
+# Environment Variables
+.env
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

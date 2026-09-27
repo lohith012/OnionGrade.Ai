@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Quality Inspection – OnionVision AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+            <h2 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <span class="text-primary">🧅</span> AI Quality Inspection & Grading
+            </h2>
+            <p class="text-muted small mb-0">Capture a live photo or upload an image of onions for real-time defect analysis and export grading.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+            <span class="badge bg-white text-slate-800 border px-3 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-cpu-fill text-success me-1"></i> Mode: <strong class="text-uppercase text-primary">{{ ai_mode }} YOLO</strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Main Upload & Inspection Card -->
+        <div class="col-lg-8">
+            <div class="card card-custom p-4 shadow-sm">
+                
+                <!-- Quick Demo Sample Picker -->
+                <div class="mb-4 p-3 bg-light rounded-4 border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-slate-800 small d-flex align-items-center gap-1">
+                            <i class="bi bi-lightning-charge-fill text-warning"></i> Quick Test Samples (Real Dataset):
+                        </span>
+                        <small class="text-muted">Click any sample to test immediately</small>
+                    </div>
+                    <div class="d-flex gap-3 overflow-auto py-2 px-1" id="samplePicker">
+                        <div class="text-center sample-card" data-sample="real_healthy_onion.jpg">
+                            <img src="/static/demo/real_healthy_onion.jpg" alt="Real Healthy" class="sample-thumb">
+                            <div class="small mt-1 text-success fw-bold">Healthy Bulb</div>
+                        </div>
+                        <div class="text-center sample-card" data-sample="real_damaged_onion.jpg">
+                            <img src="/static/demo/real_damaged_onion.jpg" alt="Real Damaged" class="sample-thumb">
+                            <div class="small mt-1 text-warning fw-bold">Damaged / Bruised</div>
+                        </div>
+                        <div class="text-center sample-card" data-sample="real_rotten_onion.jpg">
+                            <img src="/static/demo/real_rotten_onion.jpg" alt="Real Rotten" class="sample-thumb">
+                            <div class="small mt-1 text-danger fw-bold">Rotten / Moldy</div>
+                        </div>
+                        <div class="text-center sample-card" data-sample="real_sprouted_onion.jpg">
+                            <img src="/static/demo/real_sprouted_onion.jpg" alt="Real Sprouted" class="sample-thumb">
+                            <div class="small mt-1 text-purple fw-bold" style="color:#8B5CF6;">Sprouted</div>
+                        </div>
+                        <div class="text-center sample-card" data-sample="sample_onions_batch.jpg">
+                            <img src="/static/demo/sample_onions_batch.jpg" alt="Batch Sample" class="sample-thumb">
+                            <div class="small mt-1 text-muted fw-semibold">Mixed Lot Batch</div>
+                        </div>
+                        <div class="text-center sample-card" data-sample="sample_harvest_onions.jpg">
+                            <img src="/static/demo/sample_harvest_onions.jpg" alt="Sample Harvest" class="sample-thumb">
+                            <div class="small mt-1 text-muted fw-semibold">Harvest Pile</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dropzone Section -->
+                <div id="dropzoneArea" class="dropzone-container mb-4">
+                    <i class="bi bi-cloud-arrow-up-fill dropzone-icon"></i>
+                    <h5 class="fw-bold mb-1">Drag & Drop Onion Photo Here</h5>
+                    <p class="text-muted small mb-3">Accepts standard images: JPG, JPEG, PNG, WEBP (Up to 10MB)</p>
+                    
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button type="button" class="btn btn-emerald rounded-pill px-4 py-2 shadow-sm" id="browseBtn">
+                            <i class="bi bi-folder2-open me-1"></i> Browse Photo
+                        </button>
+                        <button type="button" class="btn btn-outline-dark rounded-pill px-4 py-2" id="cameraBtn">
+                            <i class="bi bi-camera-video-fill text-danger me-1"></i> Live Camera
+                        </button>
+                    </div>
+                    <input type="file" id="imageInput" accept=".jpg,.jpeg,.png,.webp" class="d-none">
+                </div>
+
+                <!-- Live Camera Section (Enhanced HUD) -->
+                <div id="cameraSection" class="d-none mb-4 camera-hud-container p-3 text-center">
+                    <div class="d-flex justify-content-between align-items-center mb-2 px-2 text-white">
+                        <div class="d-flex align-items-center small">
+                            <span class="camera-live-dot"></span> <strong>LIVE CAMERA STREAM</strong>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select id="cameraSelect" class="form-select form-select-sm bg-dark text-white border-secondary py-1" style="width: auto; font-size: 0.78rem;">
+                                <option value="environment">Back / Main Camera</option>
+                                <option value="user">Front Camera</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="position-relative d-inline-block w-100 rounded-3 overflow-hidden bg-black" style="max-height: 420px;">
+                        <video id="cameraVideo" autoplay playsinline class="w-100" style="max-height: 420px; object-fit: cover;"></video>
+                        <canvas id="cameraCanvas" class="d-none"></canvas>
+                        
+                        <!-- Alignment Guide HUD -->
+                        <div class="camera-hud-overlay">
+                            <div class="camera-guide-ring"></div>
+                        </div>
+
+                        <!-- Countdown Overlay -->
+                        <div id="cameraCountdown" class="position-absolute inset-0 d-flex align-items-center justify-content-center text-white fw-bold d-none" style="top:0;left:0;right:0;bottom:0; font-size: 5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.8); background: rgba(0,0,0,0.4);">
+                            3
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+                        <button type="button" class="btn btn-light rounded-pill px-3" id="timerSnapBtn" title="3s Timer Snap">
+                            <i class="bi bi-stopwatch me-1"></i> 3s Timer
+                        </button>
+                        <button type="button" class="btn btn-emerald btn-lg rounded-pill px-5 py-2 fw-bold shadow-lg" id="captureBtn">
+                            <i class="bi bi-camera-fill me-2"></i> Snap Photo
+                        </button>
+                        <button type="button" class="btn btn-outline-light rounded-pill px-3" id="closeCameraBtn">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Image Preview Section -->
+                <div id="previewSection" class="d-none mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold small text-slate-700">Selected Image Preview:</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" id="removeImageBtn">
+                            <i class="bi bi-trash3 me-1"></i> Discard & Re-select
+                        </button>
+                    </div>
+                    <div class="preview-container mb-3 shadow-sm border">
+                        <img id="imagePreview" src="" alt="Selected Preview">
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-emerald btn-lg rounded-pill fw-bold shadow-md py-3" id="analyzeBtn">
+                            <i class="bi bi-cpu-fill me-2"></i> Run AI Quality Assessment & Grading
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Processing Loading State -->
+                <div id="loadingSection" class="d-none text-center py-5">
+                    <div class="spinner-pulse mx-auto mb-3"></div>
+                    <h5 class="fw-bold text-dark mb-1">Analyzing Onion Quality...</h5>
+                    <p class="text-muted small mb-3">Ultralytics YOLO v11 model is detecting defects and calculating quality metrics</p>
+                    <div class="progress mx-auto rounded-pill" style="height: 8px; max-width: 340px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Alert Message Box -->
+                <div id="alertBox" class="alert d-none mt-3 rounded-3" role="alert"></div>
+
+            </div>
+        </div>
+
+        <!-- Guidance Sidebar -->
+        <div class="col-lg-4">
+            <div class="card card-custom p-4 mb-4">
+                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-lightbulb-fill text-warning"></i> Inspection Best Practices
+                </h5>
+                <ul class="text-muted small ps-3 mb-0 d-flex flex-column gap-2">
+                    <li><strong>Even Illumination:</strong> Use balanced, bright daylight or white LED lighting without harsh single-sided shadows.</li>
+                    <li><strong>Spread Evenly:</strong> Arrange onion bulbs in a single layer with slight space between them.</li>
+                    <li><strong>Plain Background:</strong> Place onions on a plain neutral or burlap tray surface for optimal contrast.</li>
+                    <li><strong>Top-down Overhead View:</strong> Capture perpendicular to the surface for accurate sizing and defect localization.</li>
+                </ul>
+            </div>
+
+            <!-- Defect Classes Reference -->
+            <div class="card card-custom p-4">
+                <h5 class="fw-bold mb-3">Target Defect Classes</h5>
+                <div class="d-flex flex-column gap-2 small">
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="metric-indicator color-good"></span>
+                            <span class="fw-bold text-dark">Good / Healthy</span>
+                        </div>
+                        <span class="badge bg-success-subtle text-success fw-bold">100 pts</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="metric-indicator color-damaged"></span>
+                            <span class="fw-bold text-dark">Damaged / Bruised</span>
+                        </div>
+                        <span class="badge bg-warning-subtle text-warning fw-bold">50 pts</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="metric-indicator color-rotten"></span>
+                            <span class="fw-bold text-dark">Rotten / Moldy</span>
+                        </div>
+                        <span class="badge bg-danger-subtle text-danger fw-bold">0 pts</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light border">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="metric-indicator color-sprouted"></span>
+                            <span class="fw-bold text-dark">Sprouted</span>
+                        </div>
+                        <span class="badge bg-purple-subtle text-purple fw-bold" style="color:#8B5CF6;">40 pts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/static/js/inspection.js"></script>
+{% endblock %}

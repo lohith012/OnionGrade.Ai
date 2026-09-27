@@ -1,0 +1,25 @@
+# YOLOv11 / YOLOv8 Dataset Configuration for Onion Quality Assessment
+# Expected folder structure:
+# dataset/
+# ├── images/
+# │   ├── train/
+# │   └── val/
+# └── labels/
+#     ├── train/
+#     └── val/
+
+path: ../dataset
+train: images/train
+val: images/val
+test: images/test  # optional
+
+# Number of classes
+nc: 5
+
+# Class names
+names:
+  0: good
+  1: damaged
+  2: rotten
+  3: sprouted
+  4: undersized

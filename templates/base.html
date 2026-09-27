@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_title }} – {{ app_tagline }}{% endblock %}</title>
+    
+    <!-- Meta tags for SEO & preview -->
+    <meta name="description" content="AI-assisted preliminary computer vision quality assessment and grading for post-harvest onions. Detect good, damaged, rotten, sprouted, and undersized onions.">
+    <meta name="keywords" content="onion grading, computer vision, AI agriculture, onion quality, smart farming">
+    <meta name="author" content="OnionVision AI">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Demo Mode Notice Bar -->
+    {% if ai_mode == 'demo' %}
+    <div class="demo-mode-alert py-1 px-3 text-center d-flex align-items-center justify-content-center gap-2">
+        <i class="bi bi-info-circle-fill text-warning"></i>
+        <span><strong>Demo Mode Active:</strong> Running realistic computer vision simulation. <em>(To switch to real YOLO, add <code>best.pt</code> to <code>models/</code> and set <code>AI_MODE=real</code>)</em></span>
+    </div>
+    {% endif %}
+
+    <!-- Navigation Header -->
+    <header class="sticky-top bg-white border-bottom shadow-sm nav-header">
+        <nav class="navbar navbar-expand-lg py-2">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                    <span class="brand-icon">🧅</span>
+                    <span class="brand-text">
+                        <span class="brand-name">OnionVision <span class="brand-highlight">AI</span></span>
+                        <span class="brand-tagline d-none d-md-block">Intelligent Quality Grading</span>
+                    </span>
+                </a>
+                
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-medium">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/inspect' %}active{% endif %}" href="/inspect">Quality Inspection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/history' %}active{% endif %}" href="/history">History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About & Methodology</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="/inspect" class="btn btn-emerald rounded-pill px-4 shadow-sm btn-action">
+                            <i class="bi bi-camera me-1"></i> Start Inspection
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-white border-top mt-5 py-4">
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-2">
+                        <span class="fs-4">🧅</span>
+                        <h5 class="mb-0 fw-bold text-slate-800">OnionVision AI</h5>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        AI-assisted preliminary onion quality assessment and grading system.<br>
+                        <em>Note: Prototype for preliminary sorting assistance; not an official regulatory certification.</em>
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="/" class="text-decoration-none text-muted small hover-emerald">Home</a></li>
+                        <li class="list-inline-item text-muted">•</li>
+                        <li class="list-inline-item"><a href="/inspect" class="text-decoration-none text-muted small hover-emerald">Inspection</a></li>
+                        <li class="list-inline-item text-muted">•</li>
+                        <li class="list-inline-item"><a href="/dashboard" class="text-decoration-none text-muted small hover-emerald">Dashboard</a></li>
+                        <li class="list-inline-item text-muted">•</li>
+                        <li class="list-inline-item"><a href="/about" class="text-decoration-none text-muted small hover-emerald">Methodology</a></li>
+                    </ul>
+                    <p class="text-muted small mb-0">
+                        &copy; 2026 OnionVision AI. Built for Smart Agricultural Excellence.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <!-- Custom Main JS -->
+    <script src="/static/js/main.js"></script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

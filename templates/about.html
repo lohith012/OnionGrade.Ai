@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}About & Methodology – OnionVision AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="text-success fw-bold text-uppercase small tracking-wide">Documentation & Standards</span>
+        <h2 class="fw-bold mt-1">Methodology & System Architecture</h2>
+        <p class="text-muted">Understanding the optical inspection pipeline, defect classification, and mathematical scoring model.</p>
+    </div>
+
+    <!-- Section 1: Overview -->
+    <div class="card card-custom p-4 mb-4">
+        <h4 class="fw-bold text-slate-800 mb-3">1. What is OnionVision AI?</h4>
+        <p class="text-muted mb-2">
+            <strong>OnionVision AI</strong> is an automated, computer-vision-powered prototype built to provide fast, objective, preliminary visual quality assessment of post-harvest onions (*Allium cepa*).
+        </p>
+        <p class="text-muted mb-0">
+            In traditional agricultural supply chains (mandi procurement centers, cold storages, and packhouses), grading is largely performed manually. This approach is prone to visual fatigue, subjective disputes between growers and commission agents, inconsistent grading standards, and delayed sorting. OnionVision AI provides an accessible digital inspection layer to assist sorters, standardize preliminary grading, and generate verifiable audit reports.
+        </p>
+    </div>
+
+    <!-- Section 2: Pipeline Stages -->
+    <div class="card card-custom p-4 mb-4">
+        <h4 class="fw-bold text-slate-800 mb-3">2. End-to-End Processing Pipeline</h4>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-camera me-1 text-success"></i> Stage 1: Image Acquisition</h6>
+                    <small class="text-muted">Accepts high-resolution lot captures via digital upload or browser-based camera feed.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-sliders me-1 text-success"></i> Stage 2: OpenCV Preprocessing</h6>
+                    <small class="text-muted">Edge-preserving Non-Local Means denoising, automatic brightness normalization, and aspect-ratio scaling.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-bounding-box me-1 text-success"></i> Stage 3: Object Detection</h6>
+                    <small class="text-muted">Ultralytics YOLO single-stage detector segments individual bulb bounding boxes and locations.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-tags me-1 text-success"></i> Stage 4: Defect Classification</h6>
+                    <small class="text-muted">Categorizes each bulb into one of 5 target quality classes with confidence probability.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-percent me-1 text-success"></i> Stage 5: Percentage Calculation</h6>
+                    <small class="text-muted">Computes the proportion of healthy versus defective bulbs across the sample lot.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-calculator me-1 text-success"></i> Stage 6: Weighted Quality Scoring</h6>
+                    <small class="text-muted">Applies the transparent mathematical scoring formula to compute an overall 0–100 index.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-award me-1 text-success"></i> Stage 7: Preliminary Grading</h6>
+                    <small class="text-muted">Maps the quality index into commercial market grades (Grade A, B, C, or URS).</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-3 h-100 bg-light">
+                    <h6 class="fw-bold text-dark"><i class="bi bi-file-earmark-pdf me-1 text-success"></i> Stage 8: Digital Certificate Generation</h6>
+                    <small class="text-muted">Compiles metadata, visual evidence, metrics, and disclaimers into a downloadable PDF certificate.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Defect Classes and Weights -->
+    <div class="card card-custom p-4 mb-4">
+        <h4 class="fw-bold text-slate-800 mb-3">3. Classification Taxonomy & Scoring Weights</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Class</th>
+                        <th>Standard Points</th>
+                        <th>Visual Indicators</th>
+                        <th>Commercial Significance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                                <span class="metric-indicator color-good me-1"></span> Good
+                            </span>
+                        </td>
+                        <td><strong>100 pts</strong></td>
+                        <td class="small text-muted">Intact dry papery tunic, firm bulb, clean root plate, no mold or cuts.</td>
+                        <td>Premium commercial / export quality.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">
+                                <span class="metric-indicator color-damaged me-1"></span> Damaged
+                            </span>
+                        </td>
+                        <td><strong>50 pts</strong></td>
+                        <td class="small text-muted">Mechanical bruising, harvest gouges, peeled outer layers, cuts.</td>
+                        <td>Acceptable for immediate domestic consumption; poor storage life.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                                <span class="metric-indicator color-rotten me-1"></span> Rotten
+                            </span>
+                        </td>
+                        <td><strong>0 pts</strong></td>
+                        <td class="small text-muted">Black/blue mold (*Aspergillus niger*), soft wet rot, foul decomposition.</td>
+                        <td>Severe defect. Rejected from consumption. Spoilage risk to neighboring bulbs.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge bg-purple-subtle text-purple border border-purple-subtle px-2 py-1">
+                                <span class="metric-indicator color-sprouted me-1"></span> Sprouted
+                            </span>
+                        </td>
+                        <td><strong>40 pts</strong></td>
+                        <td class="small text-muted">Emergent green shoots breaking out from the onion neck.</td>
+                        <td>Indicates broken dormancy. Rapid loss of internal moisture and pungency.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">
+                                <span class="metric-indicator color-undersized me-1"></span> Undersized
+                            </span>
+                        </td>
+                        <td><strong>60 pts</strong></td>
+                        <td class="small text-muted">Bulb equatorial diameter &lt; 40mm (sub-caliber small onions).</td>
+                        <td>Lower market value; relegated to processing or low-grade distribution.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 4: Scoring Formula & Grade Tiers -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card card-custom p-4 h-100">
+                <h5 class="fw-bold text-slate-800 mb-3">Mathematical Scoring Equation</h5>
+                <div class="bg-light p-3 rounded-3 font-monospace small mb-3 border">
+                    Score = (Good &times; 100 + Damaged &times; 50 + Sprouted &times; 40 + Undersized &times; 60 + Rotten &times; 0) / Total
+                </div>
+                <p class="text-muted small mb-0">
+                    Each detected bulb contributes to the lot's overall index proportional to its commercial viability. Rotten bulbs contribute 0 points, drastically penalizing high-spoilage batches.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-custom p-4 h-100">
+                <h5 class="fw-bold text-slate-800 mb-3">Preliminary Grade Tiers</h5>
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Grade A (Score ≥ 90):</strong>
+                            <div class="text-muted">Premium Export Quality – Minimal to zero defects.</div>
+                        </div>
+                        <span class="badge bg-success-subtle text-success">90–100</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Grade B (Score 75–89):</strong>
+                            <div class="text-muted">Good Domestic Market Quality – Minor acceptable defects.</div>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary">75–89</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Grade C (Score 60–74):</strong>
+                            <div class="text-muted">Fair / Processing Grade – Significant sorting required.</div>
+                        </div>
+                        <span class="badge bg-warning-subtle text-warning">60–74</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>URS (Score &lt; 60):</strong>
+                            <div class="text-muted">Under Review / Substandard – High spoilage and rejection risk.</div>
+                        </div>
+                        <span class="badge bg-danger-subtle text-danger">&lt; 60</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Limitations & Legal Disclaimer -->
+    <div class="card card-custom p-4 border-warning bg-warning-subtle">
+        <h5 class="fw-bold text-dark mb-2 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-exclamation text-warning fs-4"></i> Important Operational Limitations & Disclaimers
+        </h5>
+        <p class="small text-muted mb-2">
+            <strong>Model Dependencies:</strong> The optical classification performance depends heavily on physical capture conditions:
+        </p>
+        <ul class="small text-muted ps-3 mb-3">
+            <li><strong>Lighting:</strong> Uneven or shadowed lighting may disguise discoloration or mimic rotten spots.</li>
+            <li><strong>Orientation:</strong> Defects located on the underside of a resting bulb cannot be detected from a single top-down image.</li>
+            <li><strong>Overlapping:</strong> Closely piled onions can cause partial occlusion or inaccurate bounding box grouping.</li>
+        </ul>
+        <div class="border-top border-warning pt-2 small text-dark">
+            <strong>Official Legal Notice:</strong> OnionVision AI is a preliminary computer-vision screening tool designed for educational, research, and assistive sorting workflows. It does <strong>not</strong> substitute for official government statutory certification (such as AGMARK, APEDA, or FSSAI). Commercial settlements must involve manual inspection.
+        </div>
+    </div>
+</div>
+{% endblock %}

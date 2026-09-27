@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Inspection History – OnionVision AI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+            <h2 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <span class="text-primary">📜</span> Inspection History & Audit Records
+            </h2>
+            <p class="text-muted small mb-0">Complete historical audit trail of past onion quality grading reports and digital certificates.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/inspect" class="btn btn-emerald rounded-pill px-4 shadow-sm">
+                <i class="bi bi-camera me-1"></i> New Inspection
+            </a>
+        </div>
+    </div>
+
+    {% if inspections|length == 0 %}
+    <div class="card card-custom p-5 text-center my-4 shadow-sm">
+        <div class="py-5 max-w-500 mx-auto">
+            <i class="bi bi-archive text-muted fs-1"></i>
+            <h4 class="fw-bold mt-3 mb-2">No historical records found</h4>
+            <p class="text-muted mb-4">
+                Completed inspections will be saved here automatically along with full defect metrics and downloadable certificates.
+            </p>
+            <a href="/inspect" class="btn btn-emerald rounded-pill px-4">
+                Run First Inspection
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="card card-custom p-4 shadow-sm">
+        <!-- Search & Filter Bar -->
+        <div class="row g-2 mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" id="historySearch" class="form-control border-start-0" placeholder="Search by Report ID, Grade, or Date...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select id="gradeFilter" class="form-select">
+                    <option value="">All Grades</option>
+                    <option value="Grade A">Grade A (Premium)</option>
+                    <option value="Grade B">Grade B (Domestic)</option>
+                    <option value="Grade C">Grade C (Processing)</option>
+                    <option value="URS">URS (Substandard)</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-md-end">
+                <button type="button" class="btn btn-outline-secondary rounded-pill w-100" id="exportCsvBtn">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export History (CSV)
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom align-middle mb-0" id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Date & Time</th>
+                        <th>Total Bulbs</th>
+                        <th>Good Quality</th>
+                        <th>Defects Breakdown</th>
+                        <th>Quality Score</th>
+                        <th>Preliminary Grade</th>
+                        <th>Engine</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inspections %}
+                    <tr class="history-row" data-grade="{{ item.preliminary_grade }}">
+                        <td>
+                            <a href="/results/{{ item.id }}" class="fw-bold text-decoration-none text-dark hover-emerald">
+                                {{ item.report_id }}
+                            </a>
+                        </td>
+                        <td class="text-muted small">{{ item.created_at }}</td>
+                        <td><strong>{{ item.total_onions }}</strong></td>
+                        <td>
+                            <span class="text-success fw-bold">{{ item.good_count }}</span>
+                            <small class="text-muted">({{ item.good_percentage }}%)</small>
+                        </td>
+                        <td>
+                            <div class="small d-flex gap-1 flex-wrap">
+                                {% if item.damaged_count > 0 %}
+                                <span class="badge bg-warning-subtle text-warning">{{ item.damaged_count }} Damaged</span>
+                                {% endif %}
+                                {% if item.rotten_count > 0 %}
+                                <span class="badge bg-danger-subtle text-danger">{{ item.rotten_count }} Rotten</span>
+                                {% endif %}
+                                {% if item.sprouted_count > 0 %}
+                                <span class="badge text-purple" style="background-color: #EDE9FE; color: #6D28D9;">{{ item.sprouted_count }} Sprouted</span>
+                                {% endif %}
+                                {% if item.damaged_count == 0 and item.rotten_count == 0 and item.sprouted_count == 0 %}
+                                <span class="badge bg-success-subtle text-success">100% Healthy</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success font-heading">{{ item.quality_score|round(0)|int }}/100</span>
+                        </td>
+                        <td>
+                            {% if 'Grade A' in item.preliminary_grade %}
+                            <span class="badge-grade badge-grade-A py-1 px-3 fs-6">Grade A</span>
+                            {% elif 'Grade B' in item.preliminary_grade %}
+                            <span class="badge-grade badge-grade-B py-1 px-3 fs-6">Grade B</span>
+                            {% elif 'Grade C' in item.preliminary_grade %}
+                            <span class="badge-grade badge-grade-C py-1 px-3 fs-6">Grade C</span>
+                            {% else %}
+                            <span class="badge-grade badge-grade-URS py-1 px-3 fs-6">URS</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border small">{{ item.ai_mode|upper }}</span>
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a href="/results/{{ item.id }}" class="btn btn-sm btn-outline-emerald rounded-pill px-3 me-1">
+                                View
+                            </a>
+                            <a href="/api/report/{{ item.id }}" class="btn btn-sm btn-outline-secondary rounded-pill px-2" title="Download PDF Report">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Live Search & Filter in History Table
+    const searchInput = document.getElementById('historySearch');
+    const gradeSelect = document.getElementById('gradeFilter');
+    const rows = document.querySelectorAll('.history-row');
+
+    function filterTable() {
+        const query = searchInput.value.toLowerCase();
+        const selectedGrade = gradeSelect.value;
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            const grade = row.getAttribute('data-grade') || '';
+
+            const matchesQuery = text.includes(query);
+            const matchesGrade = !selectedGrade || grade.includes(selectedGrade);
+
+            if (matchesQuery && matchesGrade) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    if (gradeSelect) gradeSelect.addEventListener('change', filterTable);
+
+    // CSV Export
+    const exportBtn = document.getElementById('exportCsvBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            const table = document.getElementById('historyTable');
+            let csv = [];
+            for (let row of table.rows) {
+                let cols = [];
+                for (let cell of row.cells) {
+                    let text = cell.innerText.replace(/,/g, ' ').replace(/\n/g, ' ').trim();
+                    cols.push(`"${text}"`);
+                }
+                csv.push(cols.join(','));
+            }
+            const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `onionvision_history_${Date.now()}.csv`);
+            a.click();
+        });
+    }
+</script>
+{% endblock %}

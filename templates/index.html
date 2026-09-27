@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}OnionVision AI – Intelligent Onion Quality Assessment & Preliminary Grading{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5 bg-white border-bottom position-relative overflow-hidden">
+    <div class="container py-lg-4">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <div class="badge bg-emerald-subtle text-success px-3 py-2 rounded-pill mb-3 fw-bold border border-success-subtle shadow-xs">
+                    <i class="bi bi-patch-check-fill me-1"></i> Computer Vision for Smart Agriculture
+                </div>
+                <h1 class="display-4 fw-bold text-slate-900 mb-3" style="letter-spacing: -1.5px;">
+                    Intelligent Onion Quality & Defect Grading Using <span class="brand-highlight">AI</span>
+                </h1>
+                <p class="lead text-muted mb-4 fs-5">
+                    Empowering farmers, traders, and procurement mandis with instant computer vision quality assessment, defect classification, and export grading reports.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/inspect" class="btn btn-emerald btn-lg rounded-pill px-4 shadow-md">
+                        <i class="bi bi-camera-fill me-2"></i> Start Inspection
+                    </a>
+                    <a href="/inspect" class="btn btn-outline-dark btn-lg rounded-pill px-4">
+                        <i class="bi bi-image me-2"></i> Try Sample Data
+                    </a>
+                </div>
+                
+                <div class="row pt-4 mt-3 border-top g-3 text-muted small">
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> <strong>4 Defect Classes</strong>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> <strong>Instant PDF Certificate</strong>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> <strong>Live Camera Stream</strong>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> <strong>Voice Summary</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 text-center">
+                <div class="position-relative mx-auto" style="max-width: 520px;">
+                    <div class="card card-custom border-0 p-3 shadow-xl rounded-4">
+                        <img src="/static/demo/sample_onions_batch.jpg" alt="Onion Quality Assessment" class="img-fluid rounded-3 mb-3 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 border">
+                            <div class="text-start">
+                                <div class="fw-bold text-dark">Automated Defect Segmentation</div>
+                                <small class="text-muted">Good • Damaged • Rotten • Sprouted</small>
+                            </div>
+                            <span class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold shadow-xs">
+                                Grade A / B / C / URS
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Banner -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row text-center gy-3">
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-dark mb-0 font-heading">92.7%</h3>
+                <small class="text-muted fw-semibold">Model Accuracy</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-success mb-0 font-heading">&lt; 0.5s</h3>
+                <small class="text-muted fw-semibold">Inference Latency</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-dark mb-0 font-heading">4 Classes</h3>
+                <small class="text-muted fw-semibold">Healthy, Damaged, Rotten, Sprouted</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <h3 class="fw-bold text-primary mb-0 font-heading">100%</h3>
+                <small class="text-muted fw-semibold">Objective Digital Record</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="text-success fw-bold text-uppercase small tracking-wide">Key Capabilities</span>
+            <h2 class="fw-bold mt-1">Intelligent Post-Harvest Quality Pipeline</h2>
+            <p class="text-muted">Designed to eliminate human bias, resolve farmer-mandi disputes, and digitize inspection records.</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-emerald-subtle text-success p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-cpu fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">1. Real YOLO v11 Vision</h5>
+                    <p class="text-muted small mb-0">
+                        Deep learning computer vision architecture trained on diverse bulb datasets to localize and classify each onion in the lot.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-warning-subtle text-warning p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-shield-exclamation fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">2. Defect Detection</h5>
+                    <p class="text-muted small mb-0">
+                        Accurately flags physical surface cuts, bruises, fungal mold rot, and premature green sprouting that reduces shelf-life.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-primary-subtle text-primary p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-calculator fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">3. Weighted Grading Score</h5>
+                    <p class="text-muted small mb-0">
+                        Objective weighted scoring algorithm computing a 0–100 quality score and commercial grade (Grade A, B, C, or URS).
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-danger-subtle text-danger p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-file-earmark-pdf fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">4. Digital PDF Certificate</h5>
+                    <p class="text-muted small mb-0">
+                        Download formal inspection certificates complete with visual defect evidence, timestamps, and confidence breakdown.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-info-subtle text-info p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-currency-rupee fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">5. Mandi Market Economics</h5>
+                    <p class="text-muted small mb-0">
+                        Interactive valuation estimator providing mandi benchmark pricing, financial loss estimations, and storage shelf-life advice.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-4 shadow-sm">
+                    <div class="feature-icon bg-purple-subtle text-purple p-3 rounded-4 d-inline-block mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-volume-up fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">6. Voice Audio Assistant</h5>
+                    <p class="text-muted small mb-0">
+                        Built-in multi-language voice narration reciting quality scores and recommendations aloud for hands-free field usage.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5 bg-emerald text-white text-center" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-3">Ready to Grade Your Harvest?</h2>
+        <p class="lead mb-4" style="max-width: 600px; margin: 0 auto; opacity: 0.95;">
+            Get instant quality certification in seconds with AI-assisted computer vision.
+        </p>
+        <a href="/inspect" class="btn btn-light btn-lg rounded-pill px-5 fw-bold shadow-lg text-success">
+            <i class="bi bi-camera me-2"></i> Launch Scanner Now
+        </a>
+    </div>
+</section>
+{% endblock %}
